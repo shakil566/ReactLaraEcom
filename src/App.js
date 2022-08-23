@@ -1,12 +1,18 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "./App.css";
+import About from "./layouts/admin/About";
+import MasterLayout from "./layouts/admin/MasterLayout";
 
-import './App.css';
-import Footer from './Footer';
 
 function App() {
   return (
-    <div className="App">
-      <Footer />
-    </div>
+    <BrowserRouter>
+      <MasterLayout>
+        <Routes>
+          <Route exact path="/about" element={<About />} />
+        </Routes>
+      </MasterLayout>
+    </BrowserRouter>
   );
 }
 
