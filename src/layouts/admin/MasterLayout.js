@@ -7,7 +7,7 @@ import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
 
-const MasterLayout = () => {
+const MasterLayout = ({children}) => {
   return (
     <div className="sb-nav-fixed">
       <Navbar />
@@ -19,7 +19,7 @@ const MasterLayout = () => {
 
         <div id="layoutSidenav_content">
           <main>
-            
+          {children}
           </main>
           <Footer />
         </div>

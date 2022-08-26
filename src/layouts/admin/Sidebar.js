@@ -7,9 +7,17 @@ const Sidebar = () =>{
                     <div className="sb-sidenav-menu">
                         <div className="nav">
                             <div className="sb-sidenav-menu-heading">Core</div>
-                            <Link className="nav-link" to="#">
+                            <Link className="nav-link" to="/dashboard">
                                 <div className="sb-nav-link-icon"><i className="fas fa-tachometer-alt"></i></div>
                                 Dashboard
+                            </Link>
+                            <Link className="nav-link" to="/about">
+                                <div className="sb-nav-link-icon"><i className="fas fa-tachometer-alt"></i></div>
+                                About Us
+                            </Link>
+                            <Link className="nav-link" to="/contact">
+                                <div className="sb-nav-link-icon"><i className="fas fa-tachometer-alt"></i></div>
+                                Contact Us
                             </Link>
                             <div className="sb-sidenav-menu-heading">Interface</div>
                             <Link className="nav-link collapsed" to="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
@@ -54,20 +62,11 @@ const Sidebar = () =>{
                                     </div>
                                 </nav>
                             </div>
-                            <div className="sb-sidenav-menu-heading">Addons</div>
-                            <Link className="nav-link" to="charts.html">
-                                <div className="sb-nav-link-icon"><i className="fas fa-chart-area"></i></div>
-                                Charts
-                            </Link>
-                            <Link className="nav-link" to="tables.html">
-                                <div className="sb-nav-link-icon"><i className="fas fa-table"></i></div>
-                                Tables
-                            </Link>
                         </div>
                     </div>
                     <div className="sb-sidenav-footer">
                         <div className="small">Logged in as:</div>
-                        Start Bootstrap
+                        Admin
                     </div>
                 </nav>
     );
