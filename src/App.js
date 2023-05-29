@@ -1,22 +1,16 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Dashboard from "./components/admin/Dashboard";
-import About from "./components/admin/About";
-import Contact from "./components/admin/Contact";
-import MasterLayout from "./layouts/admin/MasterLayout";
-
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Customer from "./pages/Customer";
+import AddCustomer from "./pages/AddCustomer";
 
 function App() {
   return (
-    <BrowserRouter>
-      <MasterLayout>
+    <Router>
         <Routes>
-          <Route exact path="/" element={<Dashboard />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
+          <Route exact path="/" element={<Customer/>}/>
+          <Route exact path="/add-customer" element={<AddCustomer/>}/>
         </Routes>
-      </MasterLayout>
-    </BrowserRouter>
+    </Router>
   );
 }
 
