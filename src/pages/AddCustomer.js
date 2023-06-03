@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { Link } from 'react-router-dom';
 import axios from "axios";
+import swal from "sweetalert";
+import { useNavigate } from "react-router-dom";
+
 
 class AddStudent extends Component {
 
@@ -14,16 +17,34 @@ class AddStudent extends Component {
     }
 
     handleInput = (e) => {
+
         this.setState({
             [e.target.name]: e.target.value
         });
     }
 
     saveStudent = async (e) => {
+
         e.preventDefault();
+
+        document.getElementById('saveStudentBtn').innerText = 'Saving';
+        document.getElementById('saveStudentBtn').disabled = true;
+
         const res = await axios.post('http://localhost:8080/LaravelProjectDemoAdminLte/api/customer-create', this.state);
-        if (res.data.status == 200) {
-            console.log(res.data.message);
+        if (res.data.status === 200) {
+            document.getElementById('saveStudentBtn').innerText = 'Save';
+            document.getElementById('saveStudentBtn').disabled = false;
+            
+            // redirect to /home
+
+            // console.log(res.data.message);
+            swal({
+                title: "Success!",
+                text: res.data.message,
+                icon: "success",
+                button: "Ok!",
+            });
+            
 
             //for null input field after data insert
             this.setState({
@@ -34,10 +55,23 @@ class AddStudent extends Component {
                 'username': '',
                 'password': '',
             });
-        } else if (res.data.status == 402) {
-            console.log(res.data.message);
+
+        } else if (res.data.status === 402) {
+            // console.log(res.data.message);
+            swal({
+                title: "Something wrong here!",
+                text: res.data.message,
+                icon: "error",
+                button: "Ok!",
+            });
         } else {
-            console.log('Something wrong here');
+            // console.log('Something wrong here');
+            swal({
+                title: "Something wrong here!",
+                text: res.data.message,
+                icon: "error",
+                button: "Ok!",
+            });
         }
     }
 
@@ -91,7 +125,7 @@ class AddStudent extends Component {
                                 </div>
 
                                 <div className="form-group mb-3">
-                                    <button type="submit" className="btn btn-info">Save</button>
+                                    <button type="submit" id="saveStudentBtn" className="btn btn-info">Save</button>
                                 </div>
 
                             </form>

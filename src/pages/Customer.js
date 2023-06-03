@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Link } from 'react-router-dom';
 import axios from "axios";
+import '../App.css';
+import 'font-awesome/css/font-awesome.min.css';
 
 class Student extends Component {
 
@@ -38,8 +40,12 @@ class Student extends Component {
                             <td>{item.email}</td>
                             <td>{item.phone_no}</td>
                             <td>
-                                <Link to={'edit-customer/${item.id}'} className="btn btn-primary btn-small mb-2">Edit</Link><br></br>
-                                <button type="button" className="btn btn-danger btn-small">Delete</button>
+                                <Link to={'edit-customer/${item.id}'} className="btn btn-primary btn-small margin-right-10" title="Edit">
+                                    <i className="fa fa-edit"></i>
+                                </Link>
+                                <button type="button" className="btn btn-danger btn-small" title="Delete">
+                                    <i className="fa fa-trash"></i>
+                                </button>
                             </td>
                         </tr>
                     );
