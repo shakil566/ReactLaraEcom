@@ -1,131 +1,125 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import swal from "sweetalert";
 import { useNavigate } from "react-router-dom";
 
 
-class AddStudent extends Component {
+function AddCustomer() {
+    const navigate = useNavigate();
 
-    state = {
-        'first_name': '',
-        'last_name': '',
-        'email': '',
-        'phone_no': '',
-        'username': '',
-        'password': '',
-    }
+    const [first_name, setFirstName] = useState('');
+    const [last_name, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone_no, setPhone] = useState('');
+    const [photo, setPhoto] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
 
-    handleInput = (e) => {
-
-        this.setState({
-            [e.target.name]: e.target.value
+    const saveCustomer = async () => {
+        const formData = new FormData();
+        formData.append('first_name', first_name);
+        formData.append('last_name', last_name);
+        formData.append('email', email);
+        formData.append('phone_no', phone_no);
+        formData.append('photo', photo);
+        formData.append('username', username);
+        formData.append('password', password);
+        const response = await axios.post("http://localhost:8080/LaravelProjectDemoAdminLte/api/customer-create", formData, {
+            headers: { 'Content-Type': "multipart/form-data" },
         });
-    }
-
-    saveStudent = async (e) => {
-
-        e.preventDefault();
-
-        document.getElementById('saveStudentBtn').innerText = 'Saving';
-        document.getElementById('saveStudentBtn').disabled = true;
-
-        const res = await axios.post('http://localhost:8080/LaravelProjectDemoAdminLte/api/customer-create', this.state);
-        if (res.data.status === 200) {
-            document.getElementById('saveStudentBtn').innerText = 'Save';
-            document.getElementById('saveStudentBtn').disabled = false;
-            
-            // redirect to /home
-
-            // console.log(res.data.message);
+        if (response.data.status === 200) {
             swal({
                 title: "Success!",
-                text: res.data.message,
+                text: response.data.message,
                 icon: "success",
                 button: "Ok!",
             });
-            
 
-            //for null input field after data insert
-            this.setState({
-                'first_name': '',
-                'last_name': '',
-                'email': '',
-                'phone_no': '',
-                'username': '',
-                'password': '',
-            });
+            console.log(response)
+            setTimeout(() => {
+                navigate('/');
+            }, 2000);
 
-        } else if (res.data.status === 402) {
-            // console.log(res.data.message);
+        } else if (response.data.status === 402) {
             swal({
                 title: "Something wrong here!",
-                text: res.data.message,
+                text: response.data.message,
                 icon: "error",
                 button: "Ok!",
             });
         } else {
-            // console.log('Something wrong here');
             swal({
                 title: "Something wrong here!",
-                text: res.data.message,
+                text: response.data.message,
                 icon: "error",
                 button: "Ok!",
             });
         }
     }
 
-    render() {
-        return (
-            <div className="container student-div">
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        await saveCustomer();
+
+    }
+    return (
+        <React.Fragment>
+            <div className="container customer-div">
                 <div className="row">
-                    <div className="col-md-6">
+                    <div className="col-md-7 div-center">
                         <div className="card-header">
                             <h4 className="bold">Add Customer
                                 <Link to="/" className="btn btn-primary btn-sm float-end">Back</Link>
                             </h4>
                         </div>
                         <div className="card-body">
-                            <form onSubmit={this.saveStudent}>
+                            <form onSubmit={handleSubmit}>
                                 <div className="form-group mb-3">
                                     <label>
                                         First Name:
                                     </label>
-                                    <input type="text" name="first_name" onChange={this.handleInput} value={this.state.first_name} className="form-control" ></input>
+                                    <input type="text" name="first_name" onChange={(e) => setFirstName(e.target.value)} className="form-control" ></input>
                                 </div>
                                 <div className="form-group mb-3">
                                     <label>
                                         Last Name:
                                     </label>
-                                    <input type="text" name="last_name" onChange={this.handleInput} value={this.state.last_name} className="form-control" ></input>
+                                    <input type="text" name="last_name" onChange={(e) => setLastName(e.target.value)} className="form-control" ></input>
                                 </div>
                                 <div className="form-group mb-3">
                                     <label>
                                         Email:
                                     </label>
-                                    <input type="text" name="email" onChange={this.handleInput} value={this.state.email} className="form-control" ></input>
+                                    <input type="text" name="email" onChange={(e) => setEmail(e.target.value)} className="form-control" ></input>
                                 </div>
+                                <div className="form-group mb-3">
+                                    <label>
+                                        Photo:
+                                    </label>
+                                    <input type="file" className="form-control" onChange={(e) => setPhoto(e.target.files[0])} />                                </div>
                                 <div className="form-group mb-3">
                                     <label>
                                         Phone:
                                     </label>
-                                    <input type="text" name="phone_no" onChange={this.handleInput} value={this.state.phone_no} className="form-control" ></input>
+                                    <input type="text" name="phone_no" onChange={(e) => setPhone(e.target.value)} className="form-control" ></input>
                                 </div>
                                 <div className="form-group mb-3">
                                     <label>
                                         Username:
                                     </label>
-                                    <input type="text" name="username" onChange={this.handleInput} value={this.state.username} className="form-control" ></input>
+                                    <input type="text" name="username" onChange={(e) => setUsername(e.target.value)} className="form-control" ></input>
                                 </div>
                                 <div className="form-group mb-3">
                                     <label>
                                         Password:
                                     </label>
-                                    <input type="password" name="password" onChange={this.handleInput} value={this.state.password} className="form-control" ></input>
+                                    <input type="password" name="password" onChange={(e) => setPassword(e.target.value)} className="form-control" ></input>
                                 </div>
 
                                 <div className="form-group mb-3">
-                                    <button type="submit" id="saveStudentBtn" className="btn btn-info">Save</button>
+                                    <button type="submit" id="saveCustomerBtn" className="btn btn-info">Save</button>
+                                    <Link to="/" className="btn btn-danger margin-left-10">Cancel</Link>
                                 </div>
 
                             </form>
@@ -133,8 +127,8 @@ class AddStudent extends Component {
                     </div>
                 </div>
             </div>
-        );
-    }
+        </React.Fragment>
+    );
 }
 
-export default AddStudent;
+export default AddCustomer;

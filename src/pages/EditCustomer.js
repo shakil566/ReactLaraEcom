@@ -1,97 +1,144 @@
-import React, { Component } from "react";
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import swal from "sweetalert";
+import { useParams, useNavigate, Link } from "react-router-dom";
 
-class EditCustomer extends Component {
 
-    state = {
-        'first_name': '',
-        'last_name': '',
-        'email': '',
-        'phone_no': '',
-        'username': '',
-        'password': '',
+function EditCustomer() {
+    const navigate = useNavigate();
+    const { id } = useParams();
+    const [inputs, setInputs] = useState([]);
+    const [photo, setPhoto] = useState('');
+
+    const handleChange = (event) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        setInputs(values => ({ ...values, [name]: value }));
     }
 
-    handleInput = (e) => {
-        this.setState({
-            [e.target.name]: e.target.value
+
+    const updateCustomer = async () => {
+        const formData = new FormData();
+        formData.append('_method', 'PUT');
+        formData.append('first_name', inputs.first_name);
+        formData.append('last_name', inputs.last_name);
+        formData.append('email', inputs.email);
+        formData.append('phone_no', inputs.phone_no);
+        formData.append('photo', photo);
+        formData.append('username', inputs.username);
+        formData.append('password', inputs.password);
+
+        const response = await axios.post("http://localhost:8080/LaravelProjectDemoAdminLte/api/customer-update/" + id, formData, {
+            headers: { 'Content-Type': "multipart/form-data" },
         });
-    }
-
-    saveStudent = async (e) => {
-        e.preventDefault();
-        const res = await axios.post('http://localhost:8080/LaravelProjectDemoAdminLte/api/customer-create', this.state);
-        if (res.data.status == 200) {
-            console.log(res.data.message);
-
-            //for null input field after data insert
-            this.setState({
-                'first_name': '',
-                'last_name': '',
-                'email': '',
-                'phone_no': '',
-                'username': '',
-                'password': '',
+        if (response.data.status === 200) {
+            swal({
+                title: "Updated!",
+                text: response.data.message,
+                icon: "success",
+                button: "Ok!",
             });
-        } else if (res.data.status == 402) {
-            console.log(res.data.message);
+
+            console.log(response)
+            setTimeout(() => {
+                navigate('/');
+            }, 2000);
+
+        } else if (response.data.status === 402) {
+            swal({
+                title: "Something wrong here!",
+                text: response.data.message,
+                icon: "error",
+                button: "Ok!",
+            });
         } else {
-            console.log('Something wrong here');
+            swal({
+                title: "Something wrong here!",
+                text: response.data.message,
+                icon: "error",
+                button: "Ok!",
+            });
         }
     }
 
-    render() {
-        return (
-            <div className="container student-div">
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        await updateCustomer();
+
+    }
+
+    useEffect(() => {
+        getCustomer();
+    }, []);
+
+    function getCustomer() {
+        axios.get('http://localhost:8080/LaravelProjectDemoAdminLte/api/customer-edit/' + id).then(function (response) {
+            console.log(response);
+            setInputs(response.data.customer);
+        });
+    }
+    return (
+        <React.Fragment>
+            <div className="container customer-div">
                 <div className="row">
-                    <div className="col-md-6">
+                    <div className="col-md-7 div-center">
                         <div className="card-header">
-                            <h4 className="bold">Add Customer
+                            <h4 className="bold">Update Customer
                                 <Link to="/" className="btn btn-primary btn-sm float-end">Back</Link>
                             </h4>
                         </div>
                         <div className="card-body">
-                            <form onSubmit={this.saveStudent}>
+                            <form onSubmit={handleSubmit}>
                                 <div className="form-group mb-3">
                                     <label>
                                         First Name:
                                     </label>
-                                    <input type="text" name="first_name" onChange={this.handleInput} value={this.state.first_name} className="form-control" ></input>
+                                    <input type="text" name="first_name" value={inputs.first_name} onChange={handleChange} className="form-control" ></input>
                                 </div>
                                 <div className="form-group mb-3">
                                     <label>
                                         Last Name:
                                     </label>
-                                    <input type="text" name="last_name" onChange={this.handleInput} value={this.state.last_name} className="form-control" ></input>
+                                    <input type="text" name="last_name" value={inputs.last_name} onChange={handleChange} className="form-control" ></input>
                                 </div>
                                 <div className="form-group mb-3">
                                     <label>
                                         Email:
                                     </label>
-                                    <input type="text" name="email" onChange={this.handleInput} value={this.state.email} className="form-control" ></input>
+                                    <input type="text" name="email" value={inputs.email} onChange={handleChange} className="form-control" ></input>
+                                </div>
+                                <div className="form-group mb-3">
+                                    <label>
+                                        Photo:
+                                    </label>
+                                    <br></br>
+                                    <img src={`http://localhost:8080/LaravelProjectDemoAdminLte/public/uploads/user/${inputs.photo}`}
+                                        alt="" height={300} width={300} />
+                                    <input type="file" className="form-control" onChange={(e) => setPhoto(e.target.files[0])} />
+
                                 </div>
                                 <div className="form-group mb-3">
                                     <label>
                                         Phone:
                                     </label>
-                                    <input type="text" name="phone_no" onChange={this.handleInput} value={this.state.phone_no} className="form-control" ></input>
+                                    <input type="text" name="phone_no" value={inputs.phone_no} onChange={handleChange} className="form-control" ></input>
                                 </div>
                                 <div className="form-group mb-3">
                                     <label>
                                         Username:
                                     </label>
-                                    <input type="text" name="username" onChange={this.handleInput} value={this.state.username} className="form-control" ></input>
+                                    <input type="text" name="username" value={inputs.username} onChange={handleChange} className="form-control" ></input>
                                 </div>
                                 <div className="form-group mb-3">
                                     <label>
                                         Password:
                                     </label>
-                                    <input type="password" name="password" onChange={this.handleInput} value={this.state.password} className="form-control" ></input>
+                                    <input type="password" name="password" value={inputs.password} onChange={handleChange} className="form-control" ></input>
                                 </div>
 
                                 <div className="form-group mb-3">
-                                    <button type="submit" className="btn btn-info">Save</button>
+                                    <button type="submit" id="updateCustomerBtn" className="btn btn-info">Update</button>
+                                    <Link to="/" className="btn btn-danger margin-left-10">Cancel</Link>
                                 </div>
 
                             </form>
@@ -99,8 +146,8 @@ class EditCustomer extends Component {
                     </div>
                 </div>
             </div>
-        );
-    }
+        </React.Fragment>
+    );
 }
 
 export default EditCustomer;
