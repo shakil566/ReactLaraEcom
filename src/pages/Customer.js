@@ -9,13 +9,15 @@ import { useNavigate } from "react-router-dom";
 function Customer() {
     const navigate = useNavigate();
     const [customer, setCustomer] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const getCustomer = () => {
-            fetch("http://localhost:8080/LaravelProjectDemoAdminLte/api/customer")
+            fetch(process.env.REACT_APP_API_URL + "/api/customer")
                 .then(res => { return res.json() })
                 .then(response => {
                     setCustomer(response.customer)
+                    setIsLoading(false);
                 })
                 .catch(error => { console.log(error) });
         }
@@ -23,38 +25,92 @@ function Customer() {
     }, []);
 
 
-    const deleteCustomer = (id) => {
-        axios.delete('http://localhost:8080/LaravelProjectDemoAdminLte/api/customer-delete/' + id).then(function (response) {
-            // console.log(response.data.message);
-            if (response.data.status === 200) {
-                swal({
-                    title: "Deleted!",
-                    text: response.data.message,
-                    icon: "success",
-                    button: "Ok!",
-                });
+    const deleteCustomer = async (e, id) => {
+        const thisClickDelete = e.currentTarget;
+        e.preventDefault();
+        swal({
+            buttons: {
+                cancel: true,
+                confirm: true,
+            },
+            title: "Are you sure?",
+            text: "You want to delete?",
+            icon: "warning",
+            dangerMode: true,
+        })
+            .then(willDelete => {
+                if (willDelete) {
+                    axios.delete(process.env.REACT_APP_API_URL + '/api/customer-delete/' + id).then(function (response) {
+                        console.log(response.data.message);
+                        if (response.data.status === 200) {
+                            thisClickDelete.closest("tr").remove();
+                            swal({
+                                title: "Deleted!",
+                                text: response.data.message,
+                                icon: "success",
+                                button: "Ok!",
+                            });
 
-                console.log(response)
-                setTimeout(() => {
-                    navigate('/');
-                }, 2000);
+                            console.log(response)
+                            setTimeout(() => {
+                                navigate('/customer');
+                            }, 2000);
 
-            } else if (response.data.status === 402) {
-                swal({
-                    title: "Something wrong here!",
-                    text: response.data.message,
-                    icon: "error",
-                    button: "Ok!",
-                });
-            } else {
-                swal({
-                    title: "Something wrong here!",
-                    text: response.data.message,
-                    icon: "error",
-                    button: "Ok!",
-                });
-            }
-        });
+                        } else if (response.data.status === 402) {
+                            swal({
+                                title: "Something wrong here!",
+                                text: response.data.message,
+                                icon: "error",
+                                button: "Ok!",
+                            });
+                        } else {
+                            swal({
+                                title: "Something wrong here!",
+                                text: response.data.message,
+                                icon: "error",
+                                button: "Ok!",
+                            });
+                        }
+                    });
+                }
+            });
+    }
+
+
+    var customer_HTML_TABLE = '';
+    if (isLoading) {
+        customer_HTML_TABLE = <tr className="text-center"><td colSpan="7"><h2>Loading...</h2></td></tr>
+    }
+    else {
+        customer_HTML_TABLE =
+            customer.map((data, index) => (
+                <tr key={index}>
+                    <td>{index + 1} </td>
+                    <td>{data.first_name} {data.last_name}</td>
+                    <td>{data.username}</td>
+                    <td>{data.email}</td>
+                    <td>{data.phone_no}</td>
+                    <td>
+                        {
+                            data.photo == null ?
+                                <img src={process.env.REACT_APP_API_URL + `/public/img/no_image.png`} alt="" height={50} width={90} />
+                                : <img src={process.env.REACT_APP_API_URL + `/public/uploads/user/${data.photo}`} alt="" height={50} width={90} />
+
+                        }
+                    </td>
+                    <td>
+                        <Link to={`/customer/${data.id}/edit`} className="btn btn-primary btn-small margin-right-10" title="Edit">
+                            <i className="fa fa-edit"></i>
+                        </Link>
+                        {/* <button onClick={() => deleteCustomer(data.id)} className="btn btn-danger btn-small" title="Delete">
+                                <i className="fa fa-trash"></i>
+                            </button> */}
+                        <button onClick={(e) => deleteCustomer(e, data.id)} className="btn btn-danger btn-small" title="Delete">
+                            <i className="fa fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            ))
     }
 
     return (
@@ -64,7 +120,7 @@ function Customer() {
                     <div className="col-md-12">
                         <div className="card-header">
                             <h4 className="bold">Customer Details
-                                <Link to="add-customer" className="btn btn-primary btn-sm float-end">Add Customer</Link>
+                                <Link to="/add-customer" className="btn btn-primary btn-sm float-end">Add Customer</Link>
                             </h4>
                         </div>
                         <div className="card-body">
@@ -81,34 +137,14 @@ function Customer() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {
-                                        customer.map((data, index) => (
-                                            <tr key={index}>
-                                                <td>{index + 1} </td>
-                                                <td>{data.first_name} {data.last_name}</td>
-                                                <td>{data.username}</td>
-                                                <td>{data.email}</td>
-                                                <td>{data.phone_no}</td>
-                                                <td>
-                                                    <img src={`http://localhost:8080/LaravelProjectDemoAdminLte/public/uploads/user/${data.photo}`} alt="" height={50} width={90} /></td>
-                                                <td>
-                                                    <Link to={`/customer/${data.id}/edit`} className="btn btn-primary btn-small margin-right-10" title="Edit">
-                                                        <i className="fa fa-edit"></i>
-                                                    </Link>
-                                                    <button onClick={() => deleteCustomer(data.id)} className="btn btn-danger btn-small" title="Delete">
-                                                        <i className="fa fa-trash"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))
-                                    }
+                                    {customer_HTML_TABLE}
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
-        </React.Fragment>
+        </React.Fragment >
     );
 }
 

@@ -25,12 +25,12 @@ function AddCustomer() {
         formData.append('photo', photo);
         formData.append('username', username);
         formData.append('password', password);
-        const response = await axios.post("http://localhost:8080/LaravelProjectDemoAdminLte/api/customer-create", formData, {
+        const response = await axios.post(process.env.REACT_APP_API_URL+"/api/customer-create", formData, {
             headers: { 'Content-Type': "multipart/form-data" },
         });
         if (response.data.status === 200) {
             swal({
-                title: "Success!",
+                title: "Created!",
                 text: response.data.message,
                 icon: "success",
                 button: "Ok!",
@@ -38,7 +38,7 @@ function AddCustomer() {
 
             console.log(response)
             setTimeout(() => {
-                navigate('/');
+                navigate('/customer');
             }, 2000);
 
         } else if (response.data.status === 402) {
@@ -70,7 +70,7 @@ function AddCustomer() {
                     <div className="col-md-7 div-center">
                         <div className="card-header">
                             <h4 className="bold">Add Customer
-                                <Link to="/" className="btn btn-primary btn-sm float-end">Back</Link>
+                                <Link to="/customer" className="btn btn-primary btn-sm float-end">Back</Link>
                             </h4>
                         </div>
                         <div className="card-body">
@@ -119,7 +119,7 @@ function AddCustomer() {
 
                                 <div className="form-group mb-3">
                                     <button type="submit" id="saveCustomerBtn" className="btn btn-info">Save</button>
-                                    <Link to="/" className="btn btn-danger margin-left-10">Cancel</Link>
+                                    <Link to="/customer" className="btn btn-danger margin-left-10">Cancel</Link>
                                 </div>
 
                             </form>

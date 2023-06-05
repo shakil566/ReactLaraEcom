@@ -13,9 +13,34 @@
 .margin-right-10 {
   margin-right: 10px;
 }
+.margin-top-10 {
+  margin-top: 10px;
+}
+.margin-bottom-10 {
+  margin-bottom: 10px;
+}
 .div-center {
   margin: 0px auto;
 }
+a {
+  color: #fff !important;
+}
+.navbar a:hover {
+  color: #00337a !important
+}
+.active {
+  color: #00337a !important
+}
+#root {
+  padding-top: 0px !important;
+}
+.copy-right {
+  color: #fff !important;
+}
+.bg-dark-ash {
+  background-color: #7a93b7!important;
+}
+
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {

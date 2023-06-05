@@ -28,7 +28,7 @@ function EditCustomer() {
         formData.append('username', inputs.username);
         formData.append('password', inputs.password);
 
-        const response = await axios.post("http://localhost:8080/LaravelProjectDemoAdminLte/api/customer-update/" + id, formData, {
+        const response = await axios.post(process.env.REACT_APP_API_URL + "/api/customer-update/" + id, formData, {
             headers: { 'Content-Type': "multipart/form-data" },
         });
         if (response.data.status === 200) {
@@ -41,7 +41,7 @@ function EditCustomer() {
 
             console.log(response)
             setTimeout(() => {
-                navigate('/');
+                navigate('/customer');
             }, 2000);
 
         } else if (response.data.status === 402) {
@@ -72,7 +72,7 @@ function EditCustomer() {
     }, []);
 
     function getCustomer() {
-        axios.get('http://localhost:8080/LaravelProjectDemoAdminLte/api/customer-edit/' + id).then(function (response) {
+        axios.get(process.env.REACT_APP_API_URL + '/api/customer-edit/' + id).then(function (response) {
             console.log(response);
             setInputs(response.data.customer);
         });
@@ -84,7 +84,7 @@ function EditCustomer() {
                     <div className="col-md-7 div-center">
                         <div className="card-header">
                             <h4 className="bold">Update Customer
-                                <Link to="/" className="btn btn-primary btn-sm float-end">Back</Link>
+                                <Link to="/customer" className="btn btn-primary btn-sm float-end">Back</Link>
                             </h4>
                         </div>
                         <div className="card-body">
@@ -112,8 +112,13 @@ function EditCustomer() {
                                         Photo:
                                     </label>
                                     <br></br>
-                                    <img src={`http://localhost:8080/LaravelProjectDemoAdminLte/public/uploads/user/${inputs.photo}`}
-                                        alt="" height={300} width={300} />
+                                    {
+                                        inputs.photo == null ?
+                                            <img src={process.env.REACT_APP_API_URL + `/public/img/no_image.png`} alt="" height={200} width={200} />
+                                            : <img src={process.env.REACT_APP_API_URL + `/public/uploads/user/${inputs.photo}`}
+                                                alt="" height={200} width={200} />
+
+                                    }
                                     <input type="file" className="form-control" onChange={(e) => setPhoto(e.target.files[0])} />
 
                                 </div>
@@ -138,7 +143,7 @@ function EditCustomer() {
 
                                 <div className="form-group mb-3">
                                     <button type="submit" id="updateCustomerBtn" className="btn btn-info">Update</button>
-                                    <Link to="/" className="btn btn-danger margin-left-10">Cancel</Link>
+                                    <Link to="/customer" className="btn btn-danger margin-left-10">Cancel</Link>
                                 </div>
 
                             </form>
