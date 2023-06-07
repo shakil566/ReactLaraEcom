@@ -37,6 +37,7 @@ function AddCustomer() {
         //         'secret_key': process.env.REACT_APP_SECRET_KEY,
         //     },
         // });
+        
         if (response.data.status === 200) {
             swal({
                 title: "Created!",
