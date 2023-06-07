@@ -28,6 +28,18 @@ function AddCustomer() {
         const response = await axios.post(process.env.REACT_APP_API_URL + "/api/customer-create", formData, {
             headers: { 'Content-Type': "multipart/form-data" },
         });
+        // const response = await axios({
+        //     method: "post",
+        //     url: process.env.REACT_APP_API_URL + "/api/customer-create",
+        //     data: formData,
+        //     headers: {
+        //         'Content-Type': "multipart/form-data",
+        //         'type': 'Application/Json',
+        //         'self_url': process.env.REACT_APP_API_SELF_URL,
+        //         'client_url': process.env.REACT_APP_API_CLIENT_URL,
+        //         'secret_key': process.env.REACT_APP_SECRET_KEY,
+        //     },
+        // });
         // const response = await axios.post(process.env.REACT_APP_API_URL + "/api/customer-create", formData , {
         //     headers: {
         //         'Content-Type': "multipart/form-data",
@@ -37,7 +49,7 @@ function AddCustomer() {
         //         'secret_key': process.env.REACT_APP_SECRET_KEY,
         //     },
         // });
-        
+
         if (response.data.status === 200) {
             swal({
                 title: "Created!",
