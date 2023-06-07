@@ -11,16 +11,32 @@ function Customer() {
     const [customer, setCustomer] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        const getCustomer = () => {
-            fetch(process.env.REACT_APP_API_URL + "/api/customer")
-                .then(res => { return res.json() })
-                .then(response => {
-                    setCustomer(response.customer)
+    //get data with axios
+    const getCustomer = async () => {
+        axios.post(process.env.REACT_APP_API_URL + "/api/customer", {
+            headers: {
+                'type': 'Application/Json',
+                'self_url': process.env.REACT_APP_API_SELF_URL,
+                'client_url': process.env.REACT_APP_API_CLIENT_URL,
+                'secret_key': process.env.REACT_APP_SECRET_KEY,
+            }
+        })
+            .then((response) => {
+                if (response.data.status == 200) {
+                    const data = response.data.customer;
+                    setCustomer(data)
                     setIsLoading(false);
-                })
-                .catch(error => { console.log(error) });
-        }
+                } else if (response.data.status == 419) {
+                    const data = [];
+                    setCustomer(data)
+                    setIsLoading(true);
+                    console.log(response.data.message)
+                }
+            })
+            .catch(error => console.error(`Error: ${error}`));
+    }
+
+    useEffect(() => {
         getCustomer();
     }, []);
 
@@ -40,8 +56,15 @@ function Customer() {
         })
             .then(willDelete => {
                 if (willDelete) {
-                    axios.delete(process.env.REACT_APP_API_URL + '/api/customer-delete/' + id).then(function (response) {
-                        console.log(response.data.message);
+                    axios.delete(process.env.REACT_APP_API_URL + '/api/customer-delete/' + id, {
+                        headers: {
+                            'type': 'Application/Json',
+                            'self_url': process.env.REACT_APP_API_SELF_URL,
+                            'client_url': process.env.REACT_APP_API_CLIENT_URL,
+                            'secret_key': process.env.REACT_APP_SECRET_KEY,
+                        }
+                    }).then(function (response) {
+                        // console.log(response.data.message);
                         if (response.data.status === 200) {
                             thisClickDelete.closest("tr").remove();
                             swal({
@@ -51,7 +74,7 @@ function Customer() {
                                 button: "Ok!",
                             });
 
-                            console.log(response)
+                            // console.log(response)
                             setTimeout(() => {
                                 navigate('/customer');
                             }, 2000);

@@ -25,9 +25,18 @@ function AddCustomer() {
         formData.append('photo', photo);
         formData.append('username', username);
         formData.append('password', password);
-        const response = await axios.post(process.env.REACT_APP_API_URL+"/api/customer-create", formData, {
+        const response = await axios.post(process.env.REACT_APP_API_URL + "/api/customer-create", formData, {
             headers: { 'Content-Type': "multipart/form-data" },
         });
+        // const response = await axios.post(process.env.REACT_APP_API_URL + "/api/customer-create", formData , {
+        //     headers: {
+        //         'Content-Type': "multipart/form-data",
+        //         'type': 'Application/Json',
+        //         'self_url': process.env.REACT_APP_API_SELF_URL,
+        //         'client_url': process.env.REACT_APP_API_CLIENT_URL,
+        //         'secret_key': process.env.REACT_APP_SECRET_KEY,
+        //     },
+        // });
         if (response.data.status === 200) {
             swal({
                 title: "Created!",
@@ -48,7 +57,7 @@ function AddCustomer() {
                 icon: "error",
                 button: "Ok!",
             });
-        } else {
+        } else if (response.data.status === 419) {
             swal({
                 title: "Something wrong here!",
                 text: response.data.message,
