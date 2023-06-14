@@ -138,7 +138,7 @@ function Customer() {
 
     return (
         <React.Fragment>
-            <div className="container student-div">
+            <div className="container  margin-top-10">
                 <div className="row">
                     <div className="col-md-12">
                         <div className="card-header">

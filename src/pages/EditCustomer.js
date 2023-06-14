@@ -79,7 +79,7 @@ function EditCustomer() {
     }
     return (
         <React.Fragment>
-            <div className="container customer-div">
+            <div className="container  margin-top-10">
                 <div className="row">
                     <div className="col-md-7 div-center">
                         <div className="card-header">

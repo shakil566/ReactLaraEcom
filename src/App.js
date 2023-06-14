@@ -6,6 +6,7 @@ import EditCustomer from "./pages/EditCustomer";
 import Footer from "./pages/layouts/Footer";
 import Header from "./pages/layouts/Header";
 import Home from "./pages/Home";
+import Inventory from "./pages/Inventory";
 
 function App() {
   return (
@@ -13,11 +14,12 @@ function App() {
       <Header/>
         <Routes>
           <Route exact path="/" element={<Home/>}/>
+          <Route exact path="/inventory" element={<Inventory/>}/>
           <Route exact path="/customer" element={<Customer/>}/>
           <Route exact path="/add-customer" element={<AddCustomer/>}/>
           <Route exact path="/customer/:id/edit" element={<EditCustomer/>}/>
         </Routes>
-        <Footer/>
+        {/* <Footer/> */}
     </Router>
   );
 }

@@ -40,6 +40,18 @@ a {
 .bg-dark-ash {
   background-color: #7a93b7!important;
 }
+.container.customer-div{
+  margin-top: 45px;
+  border: 2px solid #7a93b7;
+  border-radius: 10px;
+}
+.text-right {
+  text-align: right;
+}
+.text-bold {
+  font-weight: bold;
+}
+
 
 
 @media (prefers-reduced-motion: no-preference) {

@@ -17,6 +17,9 @@ function Header()
               <NavLink to="/" className="nav-link {Request::url() == '/' ? 'active' : ''}" aria-current="page">Home</NavLink>
             </li>
             <li className="nav-item">
+              <NavLink to="/inventory" className="nav-link"> Inventory</NavLink>
+            </li>
+            <li className="nav-item">
               <NavLink to="/customer" className="nav-link"> Customer</NavLink>
             </li> 
             <li className="nav-item">
